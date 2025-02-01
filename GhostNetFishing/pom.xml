@@ -34,6 +34,7 @@
       <version>5.0.0</version>
       <scope>provided</scope>
     </dependency>
+
     <dependency>
       <groupId>org.glassfish</groupId>
       <artifactId>jakarta.faces</artifactId>
@@ -51,10 +52,18 @@
       <artifactId>jakarta.enterprise.cdi-api</artifactId>
       <version>3.0.0</version>
     </dependency>
+
     <dependency>
       <groupId>org.jboss.weld.servlet</groupId>
       <artifactId>weld-servlet-core</artifactId>
       <version>4.0.2.Final</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.primefaces</groupId>
+      <artifactId>primefaces</artifactId>
+      <version>14.0.0</version>
+      <classifier>jakarta</classifier>
     </dependency>
   </dependencies>
 </project>
