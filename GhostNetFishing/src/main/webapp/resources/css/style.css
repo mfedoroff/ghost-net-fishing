@@ -1,0 +1,41 @@
+/* Basisstil für die gesamte Seite */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+/* Container für Formulare (z.B. Login, Registrierung, ReportNet) */
+.login-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 50px;
+}
+
+/* Stil für die Card, in der Formulare angezeigt werden */
+.login-card {
+    width: 500px; /* Erhöht von 350px auf 400px für mehr Platz */
+    padding: 20px;
+}
+
+/* Innenabstand in der Card */
+.card-content {
+    padding: 20px;
+}
+
+/* PrimeFaces Menubar anpassen */
+.ui-menubar {
+    background: #333;
+    color: #fff;
+}
+.ui-menuitem-link {
+    color: #fff !important;
+}
+.ui-menuitem-link:hover {
+    background: #444;
+}
+
+/* Container für den Seiteninhalt */
+.content {
+    margin: 20px;
+}

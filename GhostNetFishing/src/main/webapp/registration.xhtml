@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+<ui:composition template="/templates/template.xhtml">
+    <ui:define name="content">
+        <h:form id="registrationForm">
+            <p:messages id="regMsgs" autoUpdate="true" closable="true" />
+            <div class="login-container">
+                <p:card styleClass="login-card">
+                    <f:facet name="header">
+                        <h:outputText value="Registrierung" style="font-size:18px; font-weight:bold;" />
+                    </f:facet>
+                    <div class="card-content">
+                        <p:outputLabel for="username" value="Benutzername" />
+                        <p:inputText id="username" value="#{registrationController.user.username}"
+                                     required="true" label="Benutzername" placeholder="Benutzername" style="margin-bottom:10px; width:100%;"
+                                     validator="#{uniqueUsernameValidator.validate}" />
+
+                        <p:outputLabel for="name" value="Name" />
+                        <p:inputText id="name" value="#{registrationController.user.name}"
+                                     required="true" label="Name" placeholder="Ihr Name" style="margin-bottom:10px; width:100%;" />
+
+                        <p:outputLabel for="telephone" value="Telefonnummer" />
+                        <p:inputMask id="telephone" value="#{registrationController.user.telephone}"
+                                     required="true" mask="+99 999 9999999" label="Telefonnummer" placeholder="Telefonnummer" style="margin-bottom:10px; width:100%;" />
+
+                        <p:outputLabel for="password" value="Passwort" />
+                        <p:password id="password" value="#{registrationController.password}"
+                                    required="true" label="Passwort" placeholder="Passwort" style="margin-bottom:10px; width:100%;" />
+
+                        <p:outputLabel for="confirmPassword" value="Passwort wiederholen" />
+                        <p:password id="confirmPassword" value="#{registrationController.confirmPassword}"
+                                    required="true" label="Passwort wiederholen" placeholder="Passwort wiederholen" style="margin-bottom:10px; width:100%;" />
+
+                        <p:commandButton value="Registrieren" action="#{registrationController.register}"
+                                         update="@form" style="width:100%;" />
+
+                        <div style="text-align:right; font-size:0.8em; color:#888; margin-top:10px;">
+                            * Pflichtfeld
+                        </div>
+                    </div>
+                </p:card>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>
+</html>
