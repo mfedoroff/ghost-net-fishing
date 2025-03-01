@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+<ui:composition template="/templates/template.xhtml">
+    <ui:define name="content">
+        <h:form id="ghostNetForm">
+            <p:messages id="ghostNetMsgs" autoUpdate="true" closable="true" />
+            <div class="login-container">
+                <p:card styleClass="login-card">
+                    <f:facet name="header">
+                        <h:outputText value="Geisternetz melden" style="font-size:18px; font-weight:bold;" />
+                    </f:facet>
+                    <div class="card-content">
+                        <p:staticMessage severity="info" summary="INFO" detail="Ihre Kontaktdaten werden automatisch hinterlegt."
+                                         style="width: 100%; margin-bottom:20px" rendered="#{loginController.loggedIn}"/>
+
+                        <p:outputLabel for="location" value="GPS Koordinaten (lat, long)" />
+                        <p:inputText id="location" value="#{ghostNetController.ghostNet.location}"
+                                     required="true" label="Standort"
+                                     placeholder="z.B. 48.137154, -11.576124"
+                                     validator="#{gpsCoordinatesValidator.validate}"
+                                     style="margin-bottom:10px; width:100%;" />
+
+                        <p:outputLabel for="size" value="Größe" />
+                        <p:inputText id="size" value="#{ghostNetController.ghostNet.size}"
+                                     required="true" label="Größe" placeholder="Größe in m²" style="margin-bottom:10px; width:100%;" />
+
+                        <p:outputLabel for="reporterName" value="Ihr Name" rendered="#{!loginController.loggedIn}" />
+                        <p:inputText id="reporterName" value="#{ghostNetController.ghostNet.reporterName}"
+                                     required="true" label="Ihr Name" placeholder="Ihr Name" style="margin-bottom:10px; width:100%;" rendered="#{!loginController.loggedIn}" />
+
+                        <p:outputLabel for="reporterTelephone" value="Telefonnummer" rendered="#{!loginController.loggedIn}" />
+                        <p:inputMask id="reporterTelephone" value="#{ghostNetController.ghostNet.reporterTelephone}"
+                                     required="false" mask="+99 999 9999999" label="Telefonnummer" placeholder="Telefonnummer" style="margin-bottom:10px; width:100%;" rendered="#{!loginController.loggedIn}" />
+
+                        <p:commandButton value="Melden" action="#{ghostNetController.submitReport}"
+                                         update="@form" style="width:100%;" />
+
+                        <div style="text-align:right; font-size:0.8em; color:#888; margin-top:10px;">
+                            * Pflichtfeld
+                        </div>
+                    </div>
+                </p:card>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>
+</html>
