@@ -5,7 +5,20 @@
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 <ui:composition template="/templates/template.xhtml">
   <ui:define name="content">
-    <h:outputLabel>Hallo Welt</h:outputLabel>
+    <h:form id="homeForm">
+      <div style="display: flex; justify-content: space-between; width: 100%; margin-bottom: 20px;">
+        <p:panel header="Willkommen bei Ghost Net Fishing" style="flex: 1; margin-right: 10px;">
+          <h:outputText value="Unsere Meere sind bedroht – Geisternetze treiben unkontrolliert umher und gefährden das marine Ökosystem. Unser Projekt hat es sich zur Aufgabe gemacht, diese Netze zu melden und zu bergen, um so einen Beitrag zum Schutz unserer Umwelt zu leisten." style="display: block; margin-bottom: 20px;" />
+          <h:outputText value="Auch ohne Anmeldung können Sie ein Geisternetz melden. Jede Meldung hilft uns, schneller zu handeln und die Meeresumwelt zu schützen." style="display: block; margin-bottom: 20px;" />
+          <h:link value="Geisternetz melden" outcome="reportNet.xhtml" style="text-decoration: none; font-weight: bold;" />
+        </p:panel>
+
+        <p:panel header="Ihre Hilfe zählt!" style="flex: 1; margin-left: 10px;">
+          <h:outputText value="Durch Ihre Meldung unterstützen Sie aktiv den Kampf gegen die Verschmutzung unserer Meere. Erfahren Sie mehr darüber, wie Sie sich engagieren können, und melden Sie sich an, um den Bergungsfortschritt live zu verfolgen." style="display: block; margin-bottom: 20px;" />
+          <h:link value="Jetzt registrieren" outcome="registration.xhtml" style="text-decoration: none; font-weight: bold;" />
+        </p:panel>
+      </div>
+    </h:form>
   </ui:define>
 </ui:composition>
 </html>
