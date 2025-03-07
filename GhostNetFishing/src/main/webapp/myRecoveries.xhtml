@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+<ui:composition template="/templates/template.xhtml">
+    <ui:define name="content">
+        <h:form id="myRecoveriesForm">
+            <p:messages id="recoveriesMsgs" autoUpdate="true" closable="true" />
+            <p:dataTable value="#{ghostNetController.myRecoveries}" var="net" paginator="true" rows="10"
+                         style="width:100%;" emptyMessage="Keine Bergungen gefunden">
+                <p:column headerText="Nr.">
+                    <h:outputText value="#{net.id}" />
+                </p:column>
+                <p:column headerText="Standort">
+                    <h:outputText value="#{net.location}" />
+                </p:column>
+                <p:column headerText="Größe (m²)">
+                    <h:outputText value="#{net.size}" />
+                </p:column>
+                <p:column headerText="Status">
+                    <p:tag styleClass="mr-2" severity="#{net.statusStyle}" value="#{net.localizedStatus}" />
+                </p:column>
+                <p:column headerText="Aktion">
+                    <h:link outcome="netDetails.xhtml" value="Details">
+                        <f:param name="id" value="#{net.id}" />
+                        <f:param name="returnPage" value="myRecoveries.xhtml" />
+                    </h:link>
+                </p:column>
+            </p:dataTable>
+        </h:form>
+    </ui:define>
+</ui:composition>
+</html>

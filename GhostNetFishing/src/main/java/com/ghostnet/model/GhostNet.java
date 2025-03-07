@@ -7,6 +7,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.EnumType;
+import jakarta.persistence.ManyToOne;
 
 @Entity
 public class GhostNet implements Serializable {
@@ -21,10 +22,16 @@ public class GhostNet implements Serializable {
     @Enumerated(EnumType.STRING)
     private GhostNetStatus status;
 
+    // Angaben des Meldenden (Reporter) als Strings, da auch anonyme Meldungen möglich sind
     private String reporterName;
     private String reporterTelephone;
 
+    // Bergende Person als vollständiger User (bei registrierten Nutzern)
+    @ManyToOne
+    private User rescuer;
+
     public GhostNet() {
+        // Standardstatus wird auf REPORTED gesetzt
         this.status = GhostNetStatus.REPORTED;
     }
 
@@ -64,5 +71,44 @@ public class GhostNet implements Serializable {
     }
     public void setReporterTelephone(String reporterTelephone) {
         this.reporterTelephone = reporterTelephone;
+    }
+    public User getRescuer() {
+        return rescuer;
+    }
+    public void setRescuer(User rescuer) {
+        this.rescuer = rescuer;
+    }
+
+    // Methode zur Lokalisierung des Status
+    public String getLocalizedStatus() {
+        if (status == null) return "";
+        switch(status) {
+            case REPORTED:
+                return "Gemeldet";
+            case RESCUE_PENDING:
+                return "Bergung bevorstehend";
+            case RESCUED:
+                return "Geborgen";
+            case LOST:
+                return "Verschollen";
+            default:
+                return status.toString();
+        }
+    }
+
+    public String getStatusStyle() {
+        if (status == null) return "info";
+        switch(status) {
+            case REPORTED:
+                return "info";
+            case RESCUE_PENDING:
+                return "warning";
+            case RESCUED:
+                return "success";
+            case LOST:
+                return "danger";
+            default:
+                return "info";
+        }
     }
 }
