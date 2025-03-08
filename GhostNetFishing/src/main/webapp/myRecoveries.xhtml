@@ -4,24 +4,36 @@
       xmlns:p="http://primefaces.org/ui"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<!-- Referenz des Templates -->
 <ui:composition template="/templates/template.xhtml">
+
     <ui:define name="content">
+        <!-- Formular für die Benutzerinteraktion -->
         <h:form id="myRecoveriesForm">
+            <!-- Rückmeldung der Nutzerinteraktion -->
             <p:messages id="recoveriesMsgs" autoUpdate="true" closable="true" />
+
+            <!-- Tabelle zur Anzeige der erfassten Geisternetze -->
             <p:dataTable value="#{ghostNetController.myRecoveries}" var="net" paginator="true" rows="10"
                          style="width:100%;" emptyMessage="Keine Bergungen gefunden">
+                <!-- Spalte innerhalb der Tabelle: Id des Netzes -->
                 <p:column headerText="Nr.">
                     <h:outputText value="#{net.id}" />
                 </p:column>
+                <!-- Spalte innerhalb der Tabelle: Standort der Bergung -->
                 <p:column headerText="Standort">
                     <h:outputText value="#{net.location}" />
                 </p:column>
+                <!-- Spalte innerhalb der Tabelle: Größe des Netzes in Quadratmetern -->
                 <p:column headerText="Größe (m²)">
                     <h:outputText value="#{net.size}" />
                 </p:column>
+                <!-- Spalte innerhalb der Tabelle: Status der Bergung -->
                 <p:column headerText="Status">
                     <p:tag styleClass="mr-2" severity="#{net.statusStyle}" value="#{net.localizedStatus}" />
                 </p:column>
+                <!-- Spalte innerhalb der Tabelle: Link zur Detailansicht der Bergung -->
                 <p:column headerText="Aktion">
                     <h:link outcome="netDetails.xhtml" value="Details">
                         <f:param name="id" value="#{net.id}" />

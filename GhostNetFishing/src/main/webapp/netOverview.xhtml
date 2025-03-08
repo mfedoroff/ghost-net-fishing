@@ -4,24 +4,40 @@
       xmlns:p="http://primefaces.org/ui"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets" xmlns:f="http://java.sun.com/jsf/core">
 
+<!-- Referenz des Templates -->
 <ui:composition template="/templates/template.xhtml">
+
     <ui:define name="content">
+        <!-- Formular für die Benutzerinteraktion -->
         <h:form id="netOverviewForm">
+            <!-- Rückmeldung der Nutzerinteraktion -->
             <p:messages id="overviewMsgs" autoUpdate="true" closable="true" />
+
+            <!-- Tabelle zur Anzeige von gemeldeten Geisternetzen -->
             <p:dataTable value="#{ghostNetController.ghostNets}" var="net" paginator="true" rows="10"
                          style="width:100%;" emptyMessage="Keine Geisternetze gefunden">
+
+                <!-- Spalte innerhalb der Tabelle: Nummer des Geisternetzes -->
                 <p:column headerText="Nr.">
                     <h:outputText value="#{net.id}" />
                 </p:column>
+
+                <!-- Spalte innerhalb der Tabelle: Standort des Geisternetzes -->
                 <p:column headerText="Standort">
                     <h:outputText value="#{net.location}" />
                 </p:column>
+
+                <!-- Spalte innerhalb der Tabelle: Größe des Geisternetzes -->
                 <p:column headerText="Größe (m²)">
                     <h:outputText value="#{net.size}" />
                 </p:column>
+
+                <!-- Spalte innerhalb der Tabelle: Status des Geisternetzes -->
                 <p:column headerText="Status">
                     <p:tag styleClass="mr-2" severity="#{net.statusStyle}" value="#{net.localizedStatus}" />
                 </p:column>
+
+                <!-- Spalte innerhalb der Tabelle: Link zur Detailansicht des Geisternetzes -->
                 <p:column headerText="Aktion">
                     <h:link outcome="netDetails.xhtml" value="Details">
                         <f:param name="id" value="#{net.id}" />

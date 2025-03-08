@@ -4,18 +4,27 @@
       xmlns:p="http://primefaces.org/ui"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<!-- Referenz des Templates -->
 <ui:composition template="/templates/template.xhtml">
+
+    <!-- Parameter für die Seitenansicht -->
     <f:metadata>
         <f:viewParam name="id" value="#{ghostNetController.ghostNet.id}" />
         <f:viewParam name="returnPage" value="#{ghostNetController.returnPage}" />
         <f:event type="preRenderView" listener="#{ghostNetController.loadGhostNet}" />
     </f:metadata>
+
     <ui:define name="content">
+        <!-- Formular für die Benutzerinteraktion -->
         <h:form id="netDetailsForm">
+            <!-- Rückmeldung der Nutzerinteraktion -->
             <p:messages id="detailsMsgs" autoUpdate="true" closable="true" />
 
+            <!-- Button zum Zurückkehren zur vorherigen Seite (Übersicht oder Meine Bergungen) -->
             <p:commandButton value="Zurück" action="#{ghostNetController.goBack}" style="margin-bottom:20px;" />
 
+            <!-- Panel zur Anzeige der Details des Geisternetzes -->
             <p:panel header="Geisternetz Details">
                 <p:divider align="left">
                     <div class="inline-flex align-items-center">
@@ -23,28 +32,37 @@
                         <b>Informationen</b>
                     </div>
                 </p:divider>
+
+                <!-- Anzeige der ID des Geisternetzes -->
                 <p:outputLabel value="Nr.: " style="font-weight:bold;" />
                 <h:outputText value="#{ghostNetController.ghostNet.id}" /><br/><br/>
 
+                <!-- Anzeige des Standorts des Geisternetzes -->
                 <p:outputLabel value="Standort: " style="font-weight:bold;" />
                 <h:outputText value="#{ghostNetController.ghostNet.location}" /><br/><br/>
 
+                <!-- Anzeige der Größe des Geisternetzes -->
                 <p:outputLabel value="Größe (m²): " style="font-weight:bold;" />
                 <h:outputText value="#{ghostNetController.ghostNet.size}" /><br/><br/>
 
+                <!-- Anzeige des aktuellen Status des Geisternetzes, wird als tag angezeigt (Farbe je nach Status)-->
                 <p:outputLabel value="Status: " style="font-weight:bold;" />
                 <p:tag styleClass="mr-2" severity="#{ghostNetController.ghostNet.statusStyle}" value="#{ghostNetController.ghostNet.localizedStatus}" /><br/><br/>
+
                 <p:divider align="left">
                     <div class="inline-flex align-items-center">
                         <i class="pi pi-user mr-2"/>
                         <b>Meldende Person</b>
                     </div>
                 </p:divider>
+                <!-- Anzeige der meldenden Person -->
                 <p:outputLabel value="Name: " style="font-weight:bold;" />
                 <h:outputText value="#{ghostNetController.ghostNet.reporterName}" /><br/>
+
                 <p:outputLabel value="Telefonnummer: " style="font-weight:bold;" />
                 <h:outputText value="#{ghostNetController.ghostNet.reporterTelephone}" /><br/><br/>
 
+                <!-- Anzeige der Bergenden Person, falls vorhanden -->
                 <p:outputPanel rendered="#{not empty ghostNetController.ghostNet.rescuer}">
                     <p:divider align="left">
                         <div class="inline-flex align-items-center">
@@ -57,18 +75,26 @@
                     <p:outputLabel value="Telefonnummer: " style="font-weight:bold;" />
                     <h:outputText value="#{ghostNetController.ghostNet.rescuer.telephone}" /><br/><br/>
                 </p:outputPanel>
+
                 <p:divider />
 
+                <!-- Nachricht für erfolgreiche Bergung falls Status Geborgen -->
+                <p:staticMessage severity="info" summary="INFO" detail="Das Netz wurde erfolgreich geborgen. Vielen Dank für die Mitarbeit."
+                                 style="width: 100%" rendered="#{ghostNetController.ghostNet.status == 'RESCUED'}"/>
+
+                <!-- Button zur Anmeldung zur Bergung -->
                 <p:commandButton value="Für Bergung anmelden"
                                  action="#{ghostNetController.registerForRescue}"
                                  update="netDetailsForm"
                                  rendered="#{ghostNetController.ghostNet.status == 'REPORTED'}" style="margin-right:10px;" />
 
+                <!-- Button zur Markierung des Netzes als geborgen -->
                 <p:commandButton value="Als geborgen melden"
                                  action="#{ghostNetController.markAsRescued}"
                                  update="netDetailsForm"
                                  rendered="#{loginController.loggedIn and ghostNetController.ghostNet.rescuer.username eq loginController.user.username and ghostNetController.ghostNet.status eq 'RESCUE_PENDING'}" style="margin-right:10px;" />
 
+                <!-- Button zur Freigabe der Bergung, falls umverteilt werden soll -->
                 <p:commandButton value="Bergung freigeben"
                                  action="#{ghostNetController.releaseRescue}"
                                  update="netDetailsForm"

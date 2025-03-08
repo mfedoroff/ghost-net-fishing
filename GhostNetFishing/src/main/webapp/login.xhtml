@@ -4,10 +4,16 @@
       xmlns:p="http://primefaces.org/ui"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<!-- Referenz des Templates -->
 <ui:composition template="/templates/template.xhtml">
+
     <ui:define name="content">
+        <!-- Formular für die Benutzereingabe -->
         <h:form id="loginForm">
+            <!-- Rückmeldung der Nutzerinteraktion -->
             <p:messages id="msgs" autoUpdate="true" closable="true" />
+
             <div class="login-container">
                 <p:card styleClass="login-card">
                     <f:facet name="header">
@@ -15,20 +21,23 @@
                     </f:facet>
                     <div class="card-content">
                         <p:outputLabel for="username" value="Benutzername" />
+                        <!-- Eingabefeld für den Benutzernamen -->
                         <p:inputText id="username" value="#{loginController.user.username}"
                                      required="true" label="Benutzername" placeholder="Benutzername" style="margin-bottom:10px; width:100%;" />
 
                         <p:outputLabel for="password" value="Passwort" />
+                        <!-- Eingabefeld für das Passwort -->
                         <p:password id="password" value="#{loginController.user.password}"
                                     required="true" label="Passwort" placeholder="Passwort" style="margin-bottom:10px; width:100%;" />
 
+                        <!-- Anmelde-Button mit zugehöriger Aktion -->
                         <p:commandButton value="Anmelden" action="#{loginController.login}"
                                          update="@form" style="width:100%; margin-bottom:10px;" />
 
                         <div style="text-align:right; font-size:0.8em; color:#888; margin-top:10px;">
                             * Pflichtfeld
                         </div>
-
+                        <!-- Link zur Registrierung für neue Benutzer -->
                         <h:link value="Noch kein Konto? Hier registrieren" outcome="registration.xhtml"
                                 style="display:block; text-align:center; margin-top:10px;" />
                     </div>

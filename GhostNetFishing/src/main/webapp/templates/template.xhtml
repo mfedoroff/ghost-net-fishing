@@ -3,18 +3,24 @@
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:p="http://primefaces.org/ui"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+<!-- Kopfbereich der Seite -->
 <h:head>
     <title>Ghost Net Fishing</title>
+    <!-- Einbinden eines Stylesheets aus der Bibliothek 'css' -->
     <h:outputStylesheet library="css" name="style.css" />
 </h:head>
 <h:body>
+    <!-- Formular für das Hauptmenü -->
     <h:form id="menuForm">
+        <!-- Navigationsleiste mit Menüeinträgen -->
         <p:menubar id="menubar">
             <p:menuitem value="Startseite" url="index.xhtml" />
             <p:menuitem value="Netz melden" url="reportNet.xhtml" />
+            <!-- Die Menüpunkte "Übersicht" und "Meine Bergungen" sind nur für angemeldete Benutzer sichtbar -->
             <p:menuitem value="Übersicht" url="netOverview.xhtml" rendered="#{loginController.loggedIn}" />
             <p:menuitem value="Meine Bergungen" url="myRecoveries.xhtml" rendered="#{loginController.loggedIn}" />
 
+            <!-- Untermenü für Benutzeraktionen wie Anmeldung und Abmeldung -->
             <p:submenu label="#{loginController.greeting}" style="float:right;">
                 <p:menuitem value="Anmelden" url="login.xhtml" rendered="#{!loginController.loggedIn}" />
                 <p:menuitem value="Abmelden" action="#{loginController.logout}" ajax="false" rendered="#{loginController.loggedIn}" />
@@ -23,6 +29,7 @@
     </h:form>
 
     <div class="content">
+        <!-- Platzhalter für individuellen Seiteninhalt -->
         <ui:insert name="content" />
     </div>
 </h:body>

@@ -4,37 +4,49 @@
       xmlns:p="http://primefaces.org/ui"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<!-- Referenz des Templates -->
 <ui:composition template="/templates/template.xhtml">
+
     <ui:define name="content">
+        <!-- Formular für die Benutzerinteraktion -->
         <h:form id="registrationForm">
+            <!-- Rückmeldung der Nutzerinteraktion -->
             <p:messages id="regMsgs" autoUpdate="true" closable="true" />
+
             <div class="login-container">
                 <p:card styleClass="login-card">
                     <f:facet name="header">
                         <h:outputText value="Registrierung" style="font-size:18px; font-weight:bold;" />
                     </f:facet>
                     <div class="card-content">
+                        <!-- Eingabefeld für den Benutzernamen -->
                         <p:outputLabel for="username" value="Benutzername" />
                         <p:inputText id="username" value="#{registrationController.user.username}"
                                      required="true" label="Benutzername" placeholder="Benutzername" style="margin-bottom:10px; width:100%;"
                                      validator="#{uniqueUsernameValidator.validate}" />
 
+                        <!-- Eingabefeld für den vollständigen Namen -->
                         <p:outputLabel for="name" value="Name" />
                         <p:inputText id="name" value="#{registrationController.user.name}"
                                      required="true" label="Name" placeholder="Ihr Name" style="margin-bottom:10px; width:100%;" />
 
+                        <!-- Eingabefeld für die Telefonnummer mit Maskierung -->
                         <p:outputLabel for="telephone" value="Telefonnummer" />
                         <p:inputMask id="telephone" value="#{registrationController.user.telephone}"
                                      required="true" mask="+99 999 9999999" label="Telefonnummer" placeholder="Telefonnummer" style="margin-bottom:10px; width:100%;" />
 
+                        <!-- Eingabefeld für das Passwort -->
                         <p:outputLabel for="password" value="Passwort" />
                         <p:password id="password" value="#{registrationController.password}"
                                     required="true" label="Passwort" placeholder="Passwort" style="margin-bottom:10px; width:100%;" />
 
+                        <!-- Eingabefeld zur Bestätigung des Passworts -->
                         <p:outputLabel for="confirmPassword" value="Passwort wiederholen" />
                         <p:password id="confirmPassword" value="#{registrationController.confirmPassword}"
                                     required="true" label="Passwort wiederholen" placeholder="Passwort wiederholen" style="margin-bottom:10px; width:100%;" />
 
+                        <!-- Button zur Ausführung der Registrierung -->
                         <p:commandButton value="Registrieren" action="#{registrationController.register}"
                                          update="@form" style="width:100%;" />
 
