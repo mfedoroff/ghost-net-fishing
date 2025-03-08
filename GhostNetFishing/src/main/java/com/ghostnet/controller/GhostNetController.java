@@ -5,25 +5,46 @@ import com.ghostnet.model.GhostNet;
 import com.ghostnet.model.GhostNetStatus;
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
+import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
-import jakarta.faces.view.ViewScoped;  // Verwende ViewScoped aus jakarta.faces.view
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Controller für das Verwalten von Geisternetzen in der Anwendung.
+ * Diese Klasse dient als Schnittstelle zwischen der Benutzeroberfläche und der Geschäftslogik.
+ */
 @Named
 @ViewScoped
 public class GhostNetController implements Serializable {
 
-    private GhostNet ghostNet = new GhostNet();
-    private String submissionMessage;
-    private String returnPage;
-    private GhostNetDAO ghostNetDAO = new GhostNetDAO();
+    private final GhostNetDAO ghostNetDAO = new GhostNetDAO();  // DAO für den Zugriff auf die Datenbank
+    private GhostNet ghostNet = new GhostNet();  // Repräsentiert das aktuelle Geisternetz
+    private String returnPage;  // Speichert die vorherige Seite für Navigation
 
     @Inject
-    private LoginController loginController;
+    private LoginController loginController;  // Injected LoginController für Benutzerverifikation
 
+    // Getter und Setter
+    public GhostNet getGhostNet() {
+        return ghostNet;
+    }
+    public void setGhostNet(GhostNet ghostNet) {
+        this.ghostNet = ghostNet;
+    }
+    public String getReturnPage() {
+        return returnPage;
+    }
+    public void setReturnPage(String returnPage) {
+        this.returnPage = returnPage;
+    }
+
+    /**
+     * Lädt ein Geisternetz aus der Datenbank, falls eine ID vorhanden ist.
+     */
     public void loadGhostNet() {
         if (ghostNet.getId() != null) {
             GhostNet loaded = ghostNetDAO.findById(ghostNet.getId());
@@ -33,8 +54,49 @@ public class GhostNetController implements Serializable {
         }
     }
 
-    public String submitReport() {
+    /**
+     * Leitet den Benutzer zur vorherigen Seite oder zur Netz-Übersicht weiter.
+     *
+     * @return Die URL der Zielseite mit `faces-redirect`
+     */
+    public String goBack() {
+        if (returnPage != null && !returnPage.isEmpty()) {
+            return returnPage + "?faces-redirect=true";
+        }
+        return "netOverview.xhtml?faces-redirect=true";
+    }
+
+    /**
+     * Ruft alle registrierten Geisternetze aus der Datenbank ab.
+     *
+     * @return Eine Liste von {@link GhostNet} Objekten.
+     */
+    public List<GhostNet> getGhostNets() {
+        return ghostNetDAO.findAll();
+    }
+
+    /**
+     * Ruft alle Geisternetze ab, für die der aktuell eingeloggte Nutzer als bergende Person eingetragen ist.
+     *
+     * @return Eine Liste der vom Benutzer zu rettenden Geisternetze.
+     */
+    public List<GhostNet> getMyRecoveries() {
         if (loginController != null && loginController.isLoggedIn()) {
+            return ghostNetDAO.findByRescuer(loginController.getUser());
+        } else {
+            return new ArrayList<>();
+        }
+    }
+
+    /**
+     * Meldet ein neues Geisternetz. Falls der Benutzer eingeloggt ist,
+     * werden seine Daten automatisch als Reporter-Informationen gesetzt.
+     */
+    public void submitReport() {
+        String submissionMessage;
+
+        if (loginController != null && loginController.isLoggedIn()) {
+            // Setzt automatisch die Kontaktdaten des Nutzers
             ghostNet.setReporterName(loginController.getUser().getName());
             ghostNet.setReporterTelephone(loginController.getUser().getTelephone());
         }
@@ -43,23 +105,19 @@ public class GhostNetController implements Serializable {
             submissionMessage = "Geisternetz erfolgreich gemeldet!";
             FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage(FacesMessage.SEVERITY_INFO, submissionMessage, null));
-            ghostNet = new GhostNet();
+            ghostNet = new GhostNet(); // Zurücksetzen nach erfolgreicher Meldung
         } catch (Exception e) {
             submissionMessage = "Fehler beim Melden des Geisternetzes: " + e.getMessage();
             FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage(FacesMessage.SEVERITY_ERROR, submissionMessage, null));
             e.printStackTrace();
-            return null;
         }
-        return null;
     }
 
-    public List<GhostNet> getGhostNets() {
-        return ghostNetDAO.findAll();
-    }
-
-    public String registerForRescue() {
-        // Stelle sicher, dass ghostNet vollständig geladen ist
+    /**
+     * Registriert den eingeloggten Benutzer als bergende Person für das aktuelle Geisternetz.
+     */
+    public void registerForRescue() {
         if (ghostNet.getId() != null) {
             GhostNet loaded = ghostNetDAO.findById(ghostNet.getId());
             if (loaded != null) {
@@ -78,10 +136,12 @@ public class GhostNetController implements Serializable {
                         new FacesMessage(FacesMessage.SEVERITY_ERROR, "Fehler bei der Registrierung für Bergung: " + e.getMessage(), null));
             }
         }
-        return null;
     }
 
-    public String markAsRescued() {
+    /**
+     * Markiert ein Geisternetz als geborgen, wenn der eingeloggte Benutzer die zugewiesene bergende Person ist.
+     */
+    public void markAsRescued() {
         if (ghostNet.getId() != null) {
             GhostNet loaded = ghostNetDAO.findById(ghostNet.getId());
             if (loaded != null) {
@@ -104,12 +164,13 @@ public class GhostNetController implements Serializable {
             FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage(FacesMessage.SEVERITY_WARN, "Sie sind nicht als Bergender eingetragen.", null));
         }
-        return null;
     }
 
-    public String releaseRescue() {
-        if (loginController != null && loginController.isLoggedIn() &&
-                ghostNet.getRescuer() != null &&
+    /**
+     * Gibt die Rettung eines Geisternetzes wieder frei, falls der eingeloggte Benutzer als bergende Person eingetragen war.
+     */
+    public void releaseRescue() {
+        if (loginController != null && loginController.isLoggedIn() && ghostNet.getRescuer() != null &&
                 ghostNet.getRescuer().getUsername().equals(loginController.getUser().getUsername())) {
             ghostNet.setRescuer(null);
             ghostNet.setStatus(GhostNetStatus.REPORTED);
@@ -122,40 +183,5 @@ public class GhostNetController implements Serializable {
                         new FacesMessage(FacesMessage.SEVERITY_ERROR, "Fehler beim Freigeben der Bergung: " + e.getMessage(), null));
             }
         }
-        return null;
-    }
-
-    public String goBack() {
-        if (returnPage != null && !returnPage.isEmpty()) {
-            return returnPage + "?faces-redirect=true";
-        }
-        return "netOverview.xhtml?faces-redirect=true";
-    }
-
-    public List<GhostNet> getMyRecoveries() {
-        if (loginController != null && loginController.isLoggedIn()) {
-            return ghostNetDAO.findByRescuer(loginController.getUser());
-        } else {
-            return new ArrayList<>();
-        }
-    }
-
-    public GhostNet getGhostNet() {
-        return ghostNet;
-    }
-    public void setGhostNet(GhostNet ghostNet) {
-        this.ghostNet = ghostNet;
-    }
-    public String getSubmissionMessage() {
-        return submissionMessage;
-    }
-    public void setSubmissionMessage(String submissionMessage) {
-        this.submissionMessage = submissionMessage;
-    }
-    public String getReturnPage() {
-        return returnPage;
-    }
-    public void setReturnPage(String returnPage) {
-        this.returnPage = returnPage;
     }
 }

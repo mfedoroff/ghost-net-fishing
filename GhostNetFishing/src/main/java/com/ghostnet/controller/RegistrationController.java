@@ -8,47 +8,19 @@ import jakarta.faces.context.FacesContext;
 import jakarta.inject.Named;
 import java.io.Serializable;
 
+/**
+ * Controller für die Benutzerregistrierung.
+ * Diese Klasse ermöglicht die Erstellung neuer Benutzerkonten, einschließlich der Validierung von Passwörtern
+ * und der Prüfung auf bereits vergebene Benutzernamen.
+ */
 @Named
 @SessionScoped
 public class RegistrationController implements Serializable {
 
-    private User user = new User();
-    private String password;
-    private String confirmPassword;
-    private String registrationError;
-
-    private UserDAO userDAO = new UserDAO();
-
-    public String register() {
-        if (password == null || !password.equals(confirmPassword)) {
-            registrationError = "Die Passwörter stimmen nicht überein!";
-            FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_ERROR, registrationError, null));
-            return null;
-        }
-
-        if (userDAO.findByUsername(user.getUsername()) != null) {
-            registrationError = "Der Benutzername ist bereits vergeben!";
-            FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_ERROR, registrationError, null));
-            return null;
-        }
-
-        user.setPassword(password);
-
-        try {
-            userDAO.create(user);
-            registrationError = null;
-        } catch (Exception e) {
-            registrationError = "Registrierung fehlgeschlagen: " + e.getMessage();
-            FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_ERROR, registrationError, null));
-            e.printStackTrace();
-            return null;
-        }
-
-        return "login?faces-redirect=true";
-    }
+    private final UserDAO userDAO = new UserDAO(); // DAO für den Zugriff auf Benutzerdaten
+    private User user = new User(); // Repräsentiert den neuen Benutzer, der registriert wird
+    private String password; // Das eingegebene Passwort
+    private String confirmPassword; // Das Bestätigungspasswort
 
     // Getter und Setter
     public User getUser() {
@@ -69,10 +41,52 @@ public class RegistrationController implements Serializable {
     public void setConfirmPassword(String confirmPassword) {
         this.confirmPassword = confirmPassword;
     }
-    public String getRegistrationError() {
-        return registrationError;
-    }
-    public void setRegistrationError(String registrationError) {
-        this.registrationError = registrationError;
+
+    /**
+     * Führt die Registrierung eines neuen Benutzers durch.
+     * Falls die Registrierung erfolgreich ist, wird zur Login-Seite weitergeleitet.
+     *
+     * @return Die Login-Seite oder {@code null} bei einem Fehler.
+     */
+    public String register() {
+        String registrationError;
+
+        // Prüft, ob das eingegebene Passwort mit dem Bestätigungspasswort übereinstimmt
+        if (password == null || !password.equals(confirmPassword)) {
+            registrationError = "Die Passwörter stimmen nicht überein!";
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, registrationError, null));
+            return null;
+        }
+
+        // Prüft, ob der Benutzername bereits existiert
+        if (userDAO.findByUsername(user.getUsername()) != null) {
+            registrationError = "Der Benutzername ist bereits vergeben!";
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, registrationError, null));
+            return null;
+        }
+
+        /*
+        * Speichert das Passwort im Benutzerobjekt
+        * Hinweis: Sollte verschlüsselt gespeichert werden, darauf wurde aufgrund des Prototyps verzichtet.
+        */
+        user.setPassword(password);
+
+        try {
+            // Speichert den neuen Benutzer in der Datenbank
+            userDAO.create(user);
+            registrationError = null;
+        } catch (Exception e) {
+            // Fehlerbehandlung für Probleme während der Registrierung
+            registrationError = "Registrierung fehlgeschlagen: " + e.getMessage();
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, registrationError, null));
+            e.printStackTrace();
+            return null;
+        }
+
+        // Weiterleitung zur Login-Seite nach erfolgreicher Registrierung
+        return "login?faces-redirect=true";
     }
 }

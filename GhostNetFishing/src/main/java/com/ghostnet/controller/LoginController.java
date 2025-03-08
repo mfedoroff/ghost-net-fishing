@@ -8,45 +8,18 @@ import jakarta.faces.context.FacesContext;
 import jakarta.inject.Named;
 import java.io.Serializable;
 
+/**
+ * Controller für das Login- und Sitzungsmanagement.
+ * Diese Klasse verwaltet die Authentifizierung und speichert den aktuellen Benutzer in der Session.
+ * Sie ermöglicht das Anmelden, Abmelden und Abrufen einer personalisierten Begrüßung.
+ */
 @Named
 @SessionScoped
 public class LoginController implements Serializable {
 
-    private User user = new User();
-    private boolean loggedIn = false;
-    private String loginError;
-
-    private UserDAO userDAO = new UserDAO();
-
-    public String login() {
-        User foundUser = userDAO.findByUsernameAndPassword(user.getUsername(), user.getPassword());
-        if (foundUser != null) {
-            loggedIn = true;
-            user = foundUser;
-            loginError = null;
-            return "index?faces-redirect=true";
-        } else {
-            loggedIn = false;
-            loginError = "Ungültige Zugangsdaten!";
-            FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_ERROR, loginError, null));
-            return null;
-        }
-    }
-
-    public String logout() {
-        System.out.println("Logout called");
-        loggedIn = false;
-        user = new User();
-        return "index?faces-redirect=true";
-    }
-
-    public String getGreeting() {
-        if (loggedIn && user != null && user.getName() != null && !user.getName().isEmpty()) {
-            return "Hallo, " + user.getName();
-        }
-        return "Konto";
-    }
+    private final UserDAO userDAO = new UserDAO(); // DAO für den Zugriff auf Benutzerinformationen
+    private User user = new User(); // Enthält die Daten des eingeloggten Benutzers
+    private boolean loggedIn = false; // Gibt an, ob der Benutzer eingeloggt ist
 
     // Getter und Setter
     public User getUser() {
@@ -58,7 +31,50 @@ public class LoginController implements Serializable {
     public boolean isLoggedIn() {
         return loggedIn;
     }
-    public String getLoginError() {
-        return loginError;
+
+    /**
+     * Authentifiziert den Benutzer anhand des Benutzernamens und Passworts.
+     * Falls erfolgreich, wird der Benutzer als eingeloggt markiert und zur Startseite weitergeleitet.
+     *
+     * @return Die Navigationsseite nach erfolgreicher Anmeldung oder {@code null} bei Fehlschlag.
+     */
+    public String login() {
+        User foundUser = userDAO.findByUsernameAndPassword(user.getUsername(), user.getPassword());
+        String loginError;
+
+        if (foundUser != null) {
+            loggedIn = true;
+            user = foundUser;
+            return "index?faces-redirect=true"; // Weiterleitung zur Startseite
+        } else {
+            loggedIn = false;
+            loginError = "Ungültige Zugangsdaten!";
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, loginError, null));
+            return null; // Verbleiben auf der Login-Seite
+        }
+    }
+
+    /**
+     * Loggt den aktuellen Benutzer aus, setzt die Sitzung zurück und leitet zur Startseite weiter.
+     *
+     * @return Die URL zur Startseite mit Redirect.
+     */
+    public String logout() {
+        loggedIn = false;
+        user = new User(); // Reset des Benutzerobjekts
+        return "index?faces-redirect=true"; // Weiterleitung zur Startseite
+    }
+
+    /**
+     * Gibt eine personalisierte Begrüßung zurück, wenn der Benutzer eingeloggt ist.
+     *
+     * @return Eine Begrüßung mit dem Benutzernamen oder "Konto" als Standardtext.
+     */
+    public String getGreeting() {
+        if (loggedIn && user != null && user.getName() != null && !user.getName().isEmpty()) {
+            return "Hallo, " + user.getName();
+        }
+        return "Konto"; // Standardanzeige, falls kein Benutzer angemeldet ist
     }
 }
