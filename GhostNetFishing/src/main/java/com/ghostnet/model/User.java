@@ -8,21 +8,22 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 
+/**
+ * Entitätsklasse zur Darstellung eines Benutzers im System.
+ * Diese Klasse repräsentiert einen registrierten Nutzer, der Geisternetze melden oder retten kann.
+ */
 @Entity
 @Table(name = "User", uniqueConstraints = @UniqueConstraint(columnNames = "username"))
 public class User implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    private Long id; // Eindeutige Benutzer-ID
 
-    private String username;
-    private String password;
-    private String name;
-    private String telephone;
-
-    public User() {
-    }
+    private String username; // Benutzername (muss eindeutig sein)
+    private String password; // Passwort (wurde aufgrund des Prototyps nicht verschlüsselt)
+    private String name; // Name des Benutzers
+    private String telephone; // Telefonnummer des Benutzers
 
     // Getter und Setter
     public Long getId() {

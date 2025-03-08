@@ -9,29 +9,33 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.ManyToOne;
 
+/**
+ * Entitätsklasse zur Darstellung eines Geisternetzes.
+ * Diese Klasse repräsentiert ein herrenloses Fischernetz, das gemeldet und geborgen werden kann.
+ */
 @Entity
 public class GhostNet implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    private Long id; // Eindeutige ID des Geisternetzes
 
-    private String location;
-    private Double size;
+    private String location; // Geografische Position des Netzes
+    private Double size; // Größe des Netzes in Quadratmetern oder einer anderen Einheit
 
     @Enumerated(EnumType.STRING)
-    private GhostNetStatus status;
+    private GhostNetStatus status; // Status des Netzes (Enum: REPORTED, RESCUE_PENDING, RESCUED, LOST)
 
-    // Angaben des Meldenden (Reporter) als Strings, da auch anonyme Meldungen möglich sind
-    private String reporterName;
-    private String reporterTelephone;
+    private String reporterName; // Name der Person, die das Netz gemeldet hat
+    private String reporterTelephone; // Telefonnummer des Melders
 
-    // Bergende Person als vollständiger User (bei registrierten Nutzern)
     @ManyToOne
-    private User rescuer;
+    private User rescuer; // Der Nutzer, der das Netz bergen möchte
 
+    /**
+     * Standardkonstruktor, setzt den Standardstatus auf "REPORTED".
+     */
     public GhostNet() {
-        // Standardstatus wird auf REPORTED gesetzt
         this.status = GhostNetStatus.REPORTED;
     }
 
@@ -79,7 +83,11 @@ public class GhostNet implements Serializable {
         this.rescuer = rescuer;
     }
 
-    // Methode zur Lokalisierung des Status
+    /**
+     * Gibt eine lokalisierte Textdarstellung des Status zurück.
+     *
+     * @return Der Status als lesbare Zeichenkette (z. B. "Gemeldet" statt "REPORTED").
+     */
     public String getLocalizedStatus() {
         if (status == null) return "";
         switch(status) {
@@ -96,6 +104,12 @@ public class GhostNet implements Serializable {
         }
     }
 
+    /**
+     * Gibt eine CSS-Klassenbezeichnung für die Statusanzeige zurück.
+     * Dies wird für eine visuelle Darstellung des Status verwendet.
+     *
+     * @return Ein CSS-Klassenname für den Status.
+     */
     public String getStatusStyle() {
         if (status == null) return "info";
         switch(status) {
