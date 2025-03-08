@@ -1,6 +1,8 @@
 package com.ghostnet.model;
 
 import java.io.Serializable;
+
+import com.ghostnet.util.GhostNetStatus;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;

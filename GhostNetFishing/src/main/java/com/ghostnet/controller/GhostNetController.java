@@ -2,7 +2,7 @@ package com.ghostnet.controller;
 
 import com.ghostnet.dao.GhostNetDAO;
 import com.ghostnet.model.GhostNet;
-import com.ghostnet.model.GhostNetStatus;
+import com.ghostnet.util.GhostNetStatus;
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
 import jakarta.faces.view.ViewScoped;
