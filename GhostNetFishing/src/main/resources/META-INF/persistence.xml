@@ -6,10 +6,6 @@
     <persistence-unit name="ghostnetfishingPU" transaction-type="RESOURCE_LOCAL">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
 
-        <!-- Hier werden die Entitäten angegeben. Beispiel:
-        <class>de.ghostnet.fishing.model.User</class>
-        <class>de.ghostnet.fishing.model.Geisternetz</class> -->
-
         <properties>
             <!-- JDBC Konfiguration -->
             <property name="jakarta.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver"/>
