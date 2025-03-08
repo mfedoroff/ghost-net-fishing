@@ -6,8 +6,18 @@ import com.ghostnet.util.JPAUtil;
 import jakarta.persistence.EntityManager;
 import java.util.List;
 
+/**
+ * Data Access Object (DAO) für die Verwaltung von Geisternetzen in der Datenbank.
+ * Diese Klasse bietet Methoden zum Erstellen, Aktualisieren und Abrufen von {@link GhostNet}-Objekten.
+ */
 public class GhostNetDAO {
 
+    /**
+     * Speichert ein neues Geisternetz in der Datenbank.
+     *
+     * @param ghostNet Das zu speichernde {@link GhostNet}-Objekt.
+     * @throws Exception Falls ein Fehler beim Speichern auftritt.
+     */
     public void create(GhostNet ghostNet) throws Exception {
         EntityManager em = JPAUtil.getEntityManager();
         try {
@@ -15,13 +25,18 @@ public class GhostNetDAO {
             em.persist(ghostNet);
             em.getTransaction().commit();
         } catch (Exception e) {
-            em.getTransaction().rollback();
+            em.getTransaction().rollback(); // Rollback bei Fehlern
             throw e;
         } finally {
             em.close();
         }
     }
 
+    /**
+     * Ruft alle gespeicherten Geisternetze aus der Datenbank ab.
+     *
+     * @return Eine Liste von {@link GhostNet}-Objekten.
+     */
     public List<GhostNet> findAll() {
         EntityManager em = JPAUtil.getEntityManager();
         try {
@@ -32,20 +47,32 @@ public class GhostNetDAO {
         }
     }
 
+    /**
+     * Aktualisiert die Daten eines bestehenden Geisternetzes.
+     *
+     * @param ghostNet Das aktualisierte {@link GhostNet}-Objekt.
+     * @throws Exception Falls ein Fehler beim Speichern auftritt.
+     */
     public void update(GhostNet ghostNet) throws Exception {
         EntityManager em = JPAUtil.getEntityManager();
         try {
             em.getTransaction().begin();
-            em.merge(ghostNet);
+            em.merge(ghostNet); // `merge` wird verwendet, um bestehende Objekte zu aktualisieren
             em.getTransaction().commit();
         } catch(Exception e) {
-            em.getTransaction().rollback();
+            em.getTransaction().rollback(); // Rollback, falls die Transaktion fehlschlägt
             throw e;
         } finally {
             em.close();
         }
     }
 
+    /**
+     * Sucht nach einem Geisternetz anhand seiner ID.
+     *
+     * @param id Die ID des Geisternetzes.
+     * @return Das gefundene {@link GhostNet}-Objekt.
+     */
     public GhostNet findById(Long id) {
         EntityManager em = JPAUtil.getEntityManager();
         try {
@@ -55,6 +82,12 @@ public class GhostNetDAO {
         }
     }
 
+    /**
+     * Ruft alle Geisternetze ab, die einer bestimmten bergenden Person zugewiesen sind.
+     *
+     * @param rescuer Die bergende Person als {@link User}-Objekt.
+     * @return Eine Liste von {@link GhostNet}-Objekten, die dieser bergenden Person zugewiesen sind.
+     */
     public List<GhostNet> findByRescuer(User rescuer) {
         EntityManager em = JPAUtil.getEntityManager();
         try {
