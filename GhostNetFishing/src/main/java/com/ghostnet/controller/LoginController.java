@@ -5,6 +5,7 @@ import com.ghostnet.model.User;
 import jakarta.enterprise.context.SessionScoped;
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
+import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import java.io.Serializable;
 
@@ -17,7 +18,9 @@ import java.io.Serializable;
 @SessionScoped
 public class LoginController implements Serializable {
 
-    private final UserDAO userDAO = new UserDAO(); // DAO für den Zugriff auf Benutzerinformationen
+    @Inject
+    private UserDAO userDAO; // DAO für den Zugriff auf Benutzerinformationen
+
     private User user = new User(); // Enthält die Daten des eingeloggten Benutzers
     private boolean loggedIn = false; // Gibt an, ob der Benutzer eingeloggt ist
 

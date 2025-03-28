@@ -21,12 +21,14 @@ import java.util.List;
 @ViewScoped
 public class GhostNetController implements Serializable {
 
-    private final GhostNetDAO ghostNetDAO = new GhostNetDAO();  // DAO für den Zugriff auf die Datenbank
+    @Inject
+    private GhostNetDAO ghostNetDAO;  // DAO für den Zugriff auf die Datenbank
+    @Inject
+    private LoginController loginController;  // Injected LoginController für Benutzerverifikation
+
     private GhostNet ghostNet = new GhostNet();  // Repräsentiert das aktuelle Geisternetz
     private String returnPage;  // Speichert die vorherige Seite für Navigation
 
-    @Inject
-    private LoginController loginController;  // Injected LoginController für Benutzerverifikation
 
     // Getter und Setter
     public GhostNet getGhostNet() {

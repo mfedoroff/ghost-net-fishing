@@ -2,6 +2,8 @@ package com.ghostnet.dao;
 
 import com.ghostnet.model.User;
 import com.ghostnet.util.JPAUtil;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Named;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
 
@@ -9,6 +11,8 @@ import jakarta.persistence.NoResultException;
  * Data Access Object (DAO) für die Verwaltung von Benutzerdaten in der Datenbank.
  * Diese Klasse bietet Methoden zum Speichern und Abrufen von {@link User}-Objekten.
  */
+@Named
+@ApplicationScoped
 public class UserDAO {
 
     /**

@@ -3,6 +3,8 @@ package com.ghostnet.dao;
 import com.ghostnet.model.GhostNet;
 import com.ghostnet.model.User;
 import com.ghostnet.util.JPAUtil;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Named;
 import jakarta.persistence.EntityManager;
 import java.util.List;
 
@@ -10,6 +12,8 @@ import java.util.List;
  * Data Access Object (DAO) für die Verwaltung von Geisternetzen in der Datenbank.
  * Diese Klasse bietet Methoden zum Erstellen, Aktualisieren und Abrufen von {@link GhostNet}-Objekten.
  */
+@Named
+@ApplicationScoped
 public class GhostNetDAO {
 
     /**

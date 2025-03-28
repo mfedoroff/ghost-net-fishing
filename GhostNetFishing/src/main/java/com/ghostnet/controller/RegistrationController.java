@@ -5,6 +5,7 @@ import com.ghostnet.model.User;
 import jakarta.enterprise.context.SessionScoped;
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
+import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import java.io.Serializable;
 
@@ -17,7 +18,9 @@ import java.io.Serializable;
 @SessionScoped
 public class RegistrationController implements Serializable {
 
-    private final UserDAO userDAO = new UserDAO(); // DAO für den Zugriff auf Benutzerdaten
+    @Inject
+    private UserDAO userDAO; // DAO für den Zugriff auf Benutzerdaten
+
     private User user = new User(); // Repräsentiert den neuen Benutzer, der registriert wird
     private String password; // Das eingegebene Passwort
     private String confirmPassword; // Das Bestätigungspasswort
