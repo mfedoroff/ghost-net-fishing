@@ -45,3 +45,13 @@ Die `database.mysql` ist im Hauptverzeichnis dieses Projekts zu finden.
     ``` sql
     FLUSH PRIVILEGES;
     ```
+## Hinweise
+Bei dem vorliegenden Projekt handelt es sich um eine Fallstudie und dient lediglich als Prototyp.
+Ein Produktiveinsatz ist nicht gedacht.  
+
+Für einen vollständigen Test der Anwendung ist ein Login innerhalb der Anwendung notwendig. 
+Im Folgenden sind die Zugangsdaten aus dem Datensatz aufgelistet:
+
+| Benutzer     | Passwort |
+|--------------|----------|
+| m.mustermann | 123      |
